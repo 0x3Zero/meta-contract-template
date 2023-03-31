@@ -1,0 +1,12 @@
+{
+  "meta-contract": {
+    "modules": [
+      {
+        "name": "meta-contract",
+        "path": "artifacts/meta-contract.wasm",
+        "logger_enabled": true,
+        "mem_page_count": 100
+      }
+    ]
+  }
+}
