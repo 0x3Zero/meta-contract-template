@@ -21,7 +21,6 @@ pub struct Metadata {
     pub alias: String,
     pub cid: String,
     pub public_key: String,
-    pub enc: String,
 }
 
 #[marine]

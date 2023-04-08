@@ -69,5 +69,45 @@ pub fn on_execute(
     }
 }
 
+#[marine]
+pub fn on_clone() -> bool {
+    return true;
+}
+
+#[marine]
+pub fn on_mint(contract: MetaContract, transaction: Transaction) -> MetaContractResult {
+    let mut finals: Vec<FinalMetadata> = vec![];
+
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "name".to_string(),
+        content: format!("Collabeat #{}", transaction.token_id),
+    });
+
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "description".to_string(),
+        content: "Co-Create, Collaborate and Own The Beat".to_string(),
+    });
+
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "image".to_string(),
+        content: "ipfs://".to_string(),
+    });
+
+    finals.push(FinalMetadata {
+        public_key: transaction.public_key,
+        alias: transaction.alias,
+        content: transaction.data,
+    });
+
+    MetaContractResult {
+        result: true,
+        metadatas: finals,
+        error_string: "".to_string(),
+    }
+}
+
 // Service
 // - curl
