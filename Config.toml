@@ -4,3 +4,6 @@ modules_dir = "artifacts/"
     name = "meta-contract"
     mem_pages_count = 100
     logger_enabled = true
+
+    [module.mounted_binaries]
+    ipfs = "/usr/local/bin/ipfs"

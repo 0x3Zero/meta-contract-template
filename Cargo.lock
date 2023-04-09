@@ -235,6 +235,8 @@ version = "0.1.0"
 dependencies = [
  "log",
  "marine-rs-sdk",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
