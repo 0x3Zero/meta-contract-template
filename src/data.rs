@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
 pub struct DataStructFork {
-    pub owner_public_key: String,
+    pub owner: String,
     pub data_key: String,
     pub cid: String,
 }

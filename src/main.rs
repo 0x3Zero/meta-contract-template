@@ -81,7 +81,7 @@ pub fn on_clone() -> bool {
 }
 
 #[marine]
-pub fn on_mint(contract: MetaContract, token_id: String, cid: String) -> MetaContractResult {
+pub fn on_mint(contract: MetaContract, token_id: String, ipfs_multiaddr: String, cid: String) -> MetaContractResult {
     let mut finals: Vec<FinalMetadata> = vec![];
 
     finals.push(FinalMetadata {
@@ -104,7 +104,7 @@ pub fn on_mint(contract: MetaContract, token_id: String, cid: String) -> MetaCon
 
     // extract out data
     if cid.len() > 0 {
-        let datasets = get(cid, "".to_string(), 0);
+        let datasets = get(cid, ipfs_multiaddr, 0);
         let result: Result<Vec<DataStructFork>, serde_json::Error> =
             serde_json::from_str(&datasets);
 
@@ -112,7 +112,7 @@ pub fn on_mint(contract: MetaContract, token_id: String, cid: String) -> MetaCon
             Ok(datas) => {
                 for data in datas {
                     finals.push(FinalMetadata {
-                        public_key: data.owner_public_key,
+                        public_key: data.owner,
                         alias: "".to_string(),
                         content: data.cid,
                     });
