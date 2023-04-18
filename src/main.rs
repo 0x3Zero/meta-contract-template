@@ -117,7 +117,11 @@ pub fn on_mint(contract: MetaContract, token_id: String, data: String) -> MetaCo
             match results {
               Ok(result) => {
                 if result.len() == 3 {
-                  name = format!("{}", result[0].clone().to_string());
+                  let new_name = result[0].clone().to_string();
+
+                  if new_name.len() > 0 {
+                    name = format!("{}", new_name.clone());
+                  }
                   let ipfs_multiaddr = result[1].clone().to_string();
                   let cid = result[2].clone().to_string();
                   
