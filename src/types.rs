@@ -15,7 +15,7 @@ pub struct FinalMetadata {
 }
 
 #[marine]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Metadata {
     pub data_key: String,
     pub alias: String,
