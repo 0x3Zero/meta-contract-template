@@ -4,9 +4,8 @@ mod data;
 mod defaults;
 mod types;
 
-use data::DataStructFork;
-use defaults::DEFAULT_IPFS_MULTIADDR;
-use defaults::DEFAULT_TIMEOUT_SEC;
+use data::{DataStructFork, OpenSeaAttributes};
+use defaults::{DEFAULT_IPFS_MULTIADDR, DEFAULT_TIMEOUT_SEC, DEFAULT_COLLABEAT_URL};
 use marine_rs_sdk::marine;
 use marine_rs_sdk::module_manifest;
 use marine_rs_sdk::MountedBinaryResult;
@@ -33,17 +32,25 @@ pub fn on_execute(
     transaction: Transaction,
 ) -> MetaContractResult {
     let mut finals: Vec<FinalMetadata> = vec![];
+    let mut no_beats = 0;
+    let new_metadatas = metadatas.clone();
 
     // Only 10 beat
-    if metadatas.len() > 13 {
+    for data in metadatas {
+      if data.alias == "" {
+        no_beats = no_beats + 1;
+      }
+    }
+
+    if no_beats > 10 {
         return MetaContractResult {
             result: false,
             metadatas: finals,
             error_string: "Can not be more than 10 beats".to_string(),
         };
     }
-
-    if metadatas.len() <= 0 {
+    
+    if new_metadatas.len() <= 0 {
         finals.push(FinalMetadata {
             public_key: contract.public_key.clone(),
             alias: "name".to_string(),
@@ -61,7 +68,29 @@ pub fn on_execute(
             alias: "image".to_string(),
             content: "ipfs://".to_string(),
         });
+
+        finals.push(FinalMetadata {
+            public_key: contract.public_key.clone(),
+            alias: "external_url".to_string(),
+            content: format!("{}{}", DEFAULT_COLLABEAT_URL, transaction.data_key),
+        });
+
+        finals.push(FinalMetadata {
+            public_key: contract.public_key.clone(),
+            alias: "animation_url".to_string(),
+            content: format!("{}{}", DEFAULT_COLLABEAT_URL, transaction.data_key),
+        });
     }
+
+    let attr = vec![{
+      OpenSeaAttributes { display_type: "number".to_string(), trait_type: "No of Beats".to_string(), value: no_beats}
+    }];
+
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "attributes".to_string(),
+        content: serde_json::to_string(&attr).unwrap(),
+    });
 
     finals.push(FinalMetadata {
         public_key: transaction.public_key,
@@ -82,10 +111,11 @@ pub fn on_clone() -> bool {
 }
 
 #[marine]
-pub fn on_mint(contract: MetaContract, token_id: String, data: String) -> MetaContractResult {
+pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data: String) -> MetaContractResult {
     let mut name = format!("Collabeat #{}", token_id);
     let mut error: Option<String> = None;
     let mut finals: Vec<FinalMetadata> = vec![];
+    let mut no_beats = 0;
 
     finals.push(FinalMetadata {
         public_key: contract.public_key.clone(),
@@ -131,12 +161,16 @@ pub fn on_mint(contract: MetaContract, token_id: String, data: String) -> MetaCo
     
                   match result {
                       Ok(datas) => {
+                          no_beats = datas.clone().len() as i32;
+
                           for data in datas {
+
                               finals.push(FinalMetadata {
                                   public_key: data.owner,
                                   alias: "".to_string(),
                                   content: data.cid,
                               });
+
                           }
                       }
                       Err(e) => error = Some(format!("Invalid data structure: {}", e.to_string())),
@@ -157,11 +191,32 @@ pub fn on_mint(contract: MetaContract, token_id: String, data: String) -> MetaCo
         error_string: error.unwrap().to_string(),
       };
     }
+    // adds attributes
+    let attr = vec![{
+      OpenSeaAttributes { display_type: "number".to_string(), trait_type: "No of Beats".to_string(), value: no_beats}
+    }];
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "attributes".to_string(),
+        content: serde_json::to_string(&attr).unwrap(),
+    });
 
     finals.push(FinalMetadata {
         public_key: contract.public_key.clone(),
         alias: "name".to_string(),
         content: name,
+    });
+
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "animation_url".to_string(),
+        content: format!("{}{}", DEFAULT_COLLABEAT_URL, data_key),
+    });
+
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "external_url".to_string(),
+        content: format!("{}{}", DEFAULT_COLLABEAT_URL, data_key),
     });
 
     MetaContractResult {
