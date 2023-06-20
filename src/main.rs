@@ -4,6 +4,7 @@ mod data;
 mod defaults;
 mod types;
 
+use std::collections::HashMap;
 use data::{DataStructFork, OpenSeaAttributes};
 use defaults::{DEFAULT_IPFS_MULTIADDR, DEFAULT_TIMEOUT_SEC, DEFAULT_COLLABEAT_URL};
 use marine_rs_sdk::marine;
@@ -32,15 +33,21 @@ pub fn on_execute(
     transaction: Transaction,
 ) -> MetaContractResult {
     let mut finals: Vec<FinalMetadata> = vec![];
-    let mut no_beats = 0;
     let new_metadatas = metadatas.clone();
+    let mut hash_map = HashMap::new();
 
     // Only 10 beat
     for data in metadatas {
       if data.alias == "" {
-        no_beats = no_beats + 1;
+        hash_map.insert(data.public_key, data.cid);
       }
     }
+
+    if transaction.alias == "" {
+      hash_map.insert(transaction.clone().public_key, transaction.clone().data);
+    }
+
+    let no_beats = hash_map.len() as i32;
 
     if no_beats > 10 {
         return MetaContractResult {
@@ -116,6 +123,7 @@ pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data:
     let mut error: Option<String> = None;
     let mut finals: Vec<FinalMetadata> = vec![];
     let mut no_beats = 0;
+    let mut hash_map: HashMap<String, String> = HashMap::new();
 
     finals.push(FinalMetadata {
         public_key: contract.public_key.clone(),
@@ -164,6 +172,7 @@ pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data:
                           no_beats = datas.clone().len() as i32;
 
                           for data in datas {
+                            hash_map.insert(data.owner.clone(), data.cid.clone());
 
                               finals.push(FinalMetadata {
                                   public_key: data.owner,

@@ -24,7 +24,7 @@ pub struct Metadata {
 }
 
 #[marine]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Transaction {
     pub hash: String,
     pub token_key: String,
