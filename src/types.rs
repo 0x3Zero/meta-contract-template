@@ -1,4 +1,5 @@
 use marine_rs_sdk::marine;
+use serde::Deserialize;
 
 #[marine]
 pub struct MetaContractResult {
@@ -12,6 +13,7 @@ pub struct FinalMetadata {
     pub public_key: String,
     pub alias: String,
     pub content: String,
+    pub loose: i64,
 }
 
 #[marine]
@@ -28,21 +30,20 @@ pub struct Metadata {
 #[derive(Debug, Clone)]
 pub struct Transaction {
     pub hash: String,
-    pub token_key: String,
+    pub method: String,
+    pub meta_contract_id: String,
     pub data_key: String,
-    pub nonce: i64,
-    pub from_peer_id: String,
-    pub host_id: String,
-    pub status: i64,
+    pub token_key: String,
     pub data: String,
     pub public_key: String,
     pub alias: String,
     pub timestamp: u64,
-    pub meta_contract_id: String,
-    pub method: String,
-    pub error_text: String,
+    pub chain_id: String,
+    pub token_address: String,
     pub token_id: String,
-    pub version: i64
+    pub version: String,
+    pub status: i64,
+    pub mcdata: String,
 }
 
 #[marine]
@@ -51,4 +52,10 @@ pub struct MetaContract {
     pub token_key: String,
     pub meta_contract_id: String,
     pub public_key: String,
+    pub cid: String,
+}
+
+#[derive(Debug, Default, Deserialize)]
+pub struct SerdeMetadata {
+  pub loose: i64,
 }
