@@ -34,7 +34,7 @@ pub fn on_execute(
     transaction: Transaction,
 ) -> MetaContractResult {
     let mut finals: Vec<FinalMetadata> = vec![];
-    let new_metadatas = metadatas.clone();
+    // let new_metadatas = metadatas.clone();
     let mut hash_map = HashMap::new();
 
     // Only 10 beat
@@ -45,7 +45,7 @@ pub fn on_execute(
     }
 
     if transaction.alias == "" {
-      hash_map.insert(transaction.clone().public_key, transaction.clone().data);
+      hash_map.insert(transaction.public_key.clone(), transaction.data.clone());
     }
 
     let no_beats = hash_map.len() as i32;
@@ -58,42 +58,40 @@ pub fn on_execute(
         };
     }
     
-    if new_metadatas.len() <= 0 {
-        finals.push(FinalMetadata {
-            public_key: contract.public_key.clone(),
-            alias: "name".to_string(),
-            content: format!("Collabeat #{}", transaction.token_id),
-            loose: 1,
-        });
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "name".to_string(),
+        content: format!("Collabeat #{}", transaction.token_id),
+        loose: 1,
+    });
 
-        finals.push(FinalMetadata {
-            public_key: contract.public_key.clone(),
-            alias: "description".to_string(),
-            content: "Co-Create, Collaborate and Own The Beat".to_string(),
-            loose: 1,
-        });
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "description".to_string(),
+        content: "Co-Create, Collaborate and Own The Beat".to_string(),
+        loose: 1,
+    });
 
-        finals.push(FinalMetadata {
-            public_key: contract.public_key.clone(),
-            alias: "image".to_string(),
-            content: "ipfs://".to_string(),
-            loose: 1,
-        });
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "image".to_string(),
+        content: "ipfs://".to_string(),
+        loose: 1,
+    });
 
-        finals.push(FinalMetadata {
-            public_key: contract.public_key.clone(),
-            alias: "external_url".to_string(),
-            content: format!("{}{}", DEFAULT_COLLABEAT_URL, transaction.data_key),
-            loose: 1,
-        });
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "external_url".to_string(),
+        content: format!("{}{}", DEFAULT_COLLABEAT_URL, transaction.data_key),
+        loose: 1,
+    });
 
-        finals.push(FinalMetadata {
-            public_key: contract.public_key.clone(),
-            alias: "animation_url".to_string(),
-            content: format!("{}{}", DEFAULT_COLLABEAT_URL, transaction.data_key),
-            loose: 1,
-        });
-    }
+    finals.push(FinalMetadata {
+        public_key: contract.public_key.clone(),
+        alias: "animation_url".to_string(),
+        content: format!("{}{}", DEFAULT_COLLABEAT_URL, transaction.data_key),
+        loose: 1,
+    });
 
     let attr = vec![{
       OpenSeaAttributes { display_type: "number".to_string(), trait_type: "No of Beats".to_string(), value: no_beats}
@@ -106,19 +104,19 @@ pub fn on_execute(
         loose: 0,
     });
     
-    let serde_metadata: Result<SerdeMetadata, serde_json::Error> = serde_json::from_str(&transaction.mcdata.clone());
-    let mut loose;
+    // let serde_metadata: Result<SerdeMetadata, serde_json::Error> = serde_json::from_str(&transaction.mcdata.clone());
+    // let mut loose;
 
-    match serde_metadata {
-      Ok(sm) => loose = sm.loose,
-      _ => loose = 1,
-    }
-    finals.push(FinalMetadata {
-        public_key: transaction.public_key,
-        alias: transaction.alias,
-        content: transaction.data,
-        loose,
-    });
+    // match serde_metadata {
+    //   Ok(sm) => loose = sm.loose,
+    //   _ => loose = 1,
+    // }
+    // finals.push(FinalMetadata {
+    //     public_key: transaction.public_key,
+    //     alias: transaction.alias,
+    //     content: transaction.data,
+    //     loose,
+    // });
 
     MetaContractResult {
         result: true,
