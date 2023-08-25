@@ -101,7 +101,7 @@ pub fn on_execute(
         public_key: contract.public_key.clone(),
         alias: "attributes".to_string(),
         content: serde_json::to_string(&attr).unwrap(),
-        loose: 0,
+        loose: 1,
     });
     
     // let serde_metadata: Result<SerdeMetadata, serde_json::Error> = serde_json::from_str(&transaction.mcdata.clone());
@@ -193,7 +193,7 @@ pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data:
                                   public_key: data.owner,
                                   alias: "".to_string(),
                                   content: data.cid,
-                                  loose: 1,
+                                  loose: 0,
                               });
 
                           }
