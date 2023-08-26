@@ -153,61 +153,49 @@ pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data:
     });
 
     // extract out data
-    // if data.len() > 0 {
+    if data.len() > 0 {
 
-    //     let data_bytes = &hex::decode(&data);
+        let data_bytes = &hex::decode(&data);
 
-    //     match data_bytes {
-    //       Ok(decoded) => {
-    //         let param_types = vec![
-    //           ParamType::String,
-    //           ParamType::String,
-    //           ParamType::String,
-    //         ];
+        match data_bytes {
+          Ok(decoded) => {
+            let param_types = vec![
+              ParamType::String,
+              ParamType::String,
+              ParamType::String,
+            ];
 
-    //         let results = decode(&param_types, decoded);
+            let results = decode(&param_types, decoded);
 
-    //         match results {
-    //           Ok(result) => {
-    //             if result.len() == 3 {
-    //               let new_name = result[0].clone().to_string();
+            match results {
+              Ok(result) => {
+                if result.len() == 3 {
+                  let new_name = result[0].clone().to_string();
 
-    //               if new_name.len() > 0 {
-    //                 name = format!("{}", new_name.clone());
-    //               }
-    //               let ipfs_multiaddr = result[1].clone().to_string();
-    //               let cid = result[2].clone().to_string();
+                  if new_name.len() > 0 {
+                    name = format!("{}", new_name.clone());
+                  }
+                  let ipfs_multiaddr = result[1].clone().to_string();
+                  let cid = result[2].clone().to_string();
                   
-    //               let datasets = get(cid, ipfs_multiaddr, 0);
-    //               let result: Result<Vec<DataStructFork>, serde_json::Error> =
-    //                   serde_json::from_str(&datasets);
+                  let datasets = get(cid, ipfs_multiaddr, 0);
+                  let result: Result<Vec<DataStructFork>, serde_json::Error> =
+                      serde_json::from_str(&datasets);
     
-    //               match result {
-    //                   Ok(datas) => {
-    //                       no_beats = datas.clone().len() as i32;
-
-    //                       for data in datas {
-    //                         hash_map.insert(data.owner.clone(), data.cid.clone());
-
-    //                           finals.push(FinalMetadata {
-    //                               public_key: data.owner,
-    //                               alias: "".to_string(),
-    //                               content: data.cid,
-    //                               loose: 0,
-    //                           });
-
-    //                       }
-    //                   }
-    //                   Err(e) => error = Some(format!("Invalid data structure: {}", e.to_string())),
-    //               }
-    //             }
-    //           },
-    //           Err(e) => error = Some(format!("Invalid data structure: {}", e.to_string())),
-    //         }
-    //       },
-    //       Err(e) => error = Some(format!("Invalid data structure: {}", e.to_string())),
-    //     }
-    // }
+                  match result {
+                      Ok(datas) => {
+                          no_beats = datas.clone().len() as i32;
+                      }
+                      Err(e) => error = Some(format!("Invalid data structure: {}", e.to_string())),
+                  }
+                }
+              },
+              Err(e) => error = Some(format!("Invalid data structure: {}", e.to_string())),
+            }
+          },
+          Err(e) => error = Some(format!("Invalid data structure: {}", e.to_string())),
+        }
+    }
 
     if !error.is_none() {
       return MetaContractResult {
