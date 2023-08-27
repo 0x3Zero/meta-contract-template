@@ -63,6 +63,7 @@ pub fn on_execute(
         alias: "name".to_string(),
         content: format!("Collabeat #{}", transaction.token_id),
         loose: 1,
+        version: "".to_string(),
     });
 
     finals.push(FinalMetadata {
@@ -70,6 +71,7 @@ pub fn on_execute(
         alias: "description".to_string(),
         content: "Co-Create, Collaborate and Own The Beat".to_string(),
         loose: 1,
+        version: "".to_string(),
     });
 
     finals.push(FinalMetadata {
@@ -77,6 +79,7 @@ pub fn on_execute(
         alias: "image".to_string(),
         content: "ipfs://".to_string(),
         loose: 1,
+        version: "".to_string(),
     });
 
     finals.push(FinalMetadata {
@@ -84,6 +87,7 @@ pub fn on_execute(
         alias: "external_url".to_string(),
         content: format!("{}{}", DEFAULT_COLLABEAT_URL, transaction.data_key),
         loose: 1,
+        version: "".to_string(),
     });
 
     finals.push(FinalMetadata {
@@ -91,6 +95,7 @@ pub fn on_execute(
         alias: "animation_url".to_string(),
         content: format!("{}{}", DEFAULT_COLLABEAT_URL, transaction.data_key),
         loose: 1,
+        version: "".to_string(),
     });
 
     let attr = vec![{
@@ -102,6 +107,7 @@ pub fn on_execute(
         alias: "attributes".to_string(),
         content: serde_json::to_string(&attr).unwrap(),
         loose: 1,
+        version: "".to_string(),
     });
     
     // let serde_metadata: Result<SerdeMetadata, serde_json::Error> = serde_json::from_str(&transaction.mcdata.clone());
@@ -143,6 +149,7 @@ pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data:
         alias: "description".to_string(),
         content: "Co-Create, Collaborate and Own The Beat".to_string(),
         loose: 1,
+        version: "".to_string(),
     });
 
     finals.push(FinalMetadata {
@@ -150,6 +157,7 @@ pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data:
         alias: "image".to_string(),
         content: "ipfs://".to_string(),
         loose: 1,
+        version: "".to_string(),
     });
 
     // extract out data
@@ -213,6 +221,7 @@ pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data:
         alias: "attributes".to_string(),
         content: serde_json::to_string(&attr).unwrap(),
         loose: 1,
+        version: "".to_string(), 
     });
 
     finals.push(FinalMetadata {
@@ -220,6 +229,7 @@ pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data:
         alias: "name".to_string(),
         content: name,
         loose: 1,
+        version: "".to_string(),
     });
 
     finals.push(FinalMetadata {
@@ -227,6 +237,7 @@ pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data:
         alias: "animation_url".to_string(),
         content: format!("{}{}", DEFAULT_COLLABEAT_URL, data_key),
         loose: 1,
+        version: "".to_string(),
     });
 
     finals.push(FinalMetadata {
@@ -234,6 +245,7 @@ pub fn on_mint(contract: MetaContract, data_key: String, token_id: String, data:
         alias: "external_url".to_string(),
         content: format!("{}{}", DEFAULT_COLLABEAT_URL, data_key),
         loose: 1,
+        version: "".to_string(),
     });
 
     MetaContractResult {
