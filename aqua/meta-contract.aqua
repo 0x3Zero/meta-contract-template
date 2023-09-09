@@ -4,11 +4,15 @@ data FinalMetadata:
   public_key: string
   alias: string
   content: string
+  loose: i64
+  version: string
 
 data MetaContract:
+  hash: string
   token_key: string
   meta_contract_id: string
   public_key: string
+  cid: string
 
 data MetaContractResult:
   result: bool
@@ -16,27 +20,33 @@ data MetaContractResult:
   error_string: string
 
 data Metadata:
-  data_key: string
-  alias: string
-  cid: string
-  public_key: string
-
-data Transaction:
   hash: string
   token_key: string
   data_key: string
-  nonce: i64
-  from_peer_id: string
-  host_id: string
-  status: i64
+  meta_contract_id: string
+  token_id: string
+  alias: string
+  cid: string
+  public_key: string
+  version: string
+  loose: i64
+
+data Transaction:
+  hash: string
+  method: string
+  meta_contract_id: string
+  data_key: string
+  token_key: string
   data: string
   public_key: string
   alias: string
   timestamp: u64
-  meta_contract_id: string
-  method: string
-  error_text: string
+  chain_id: string
+  token_address: string
   token_id: string
+  version: string
+  status: i64
+  mcdata: string
 
 service MetaContract("meta-contract"):
   on_clone() -> bool
